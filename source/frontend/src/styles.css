@@ -1,0 +1,68 @@
+html,
+body,
+#app {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  background: var(--p-surface-50);
+  color: var(--p-text-color);
+}
+
+.shell {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1.25rem 1.5rem 2.5rem;
+}
+
+.page-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: flex-start;
+  margin-bottom: 1.25rem;
+}
+
+.page-header h1 {
+  margin: 0 0 0.25rem;
+  font-size: 1.6rem;
+}
+
+.toolbar-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: end;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.field-label {
+  font-size: 0.85rem;
+  color: var(--p-text-muted-color);
+}
+
+.grow {
+  flex: 1 1 18rem;
+}
+
+.status-error {
+  max-width: 28rem;
+  font-size: 0.8rem;
+  color: var(--p-red-500);
+}
+
+.table-link {
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.table-link:hover {
+  text-decoration: underline;
+}

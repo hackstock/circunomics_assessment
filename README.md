@@ -1,5 +1,9 @@
 # Fullstack Coding Challenge
- 
+
+**Implementation notes.** This solution is FastAPI + Vue 3 + PostgreSQL. Run with `make up` (or `docker compose up --build`) — see [SETUP.md](SETUP.md).
+
+GitHub’s REST <a href="https://docs.github.com/en/rest/commits/commits#list-commits" target="_blank" rel="noopener noreferrer">List commits</a> endpoint returns at most 100 commits per page, so 1000 commits is about 10 requests. Unauthenticated clients are limited to **60 requests per hour**; a <a href="https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens" target="_blank" rel="noopener noreferrer">personal access token</a> raises the primary limit to **5,000 requests per hour** (<a href="https://docs.github.com/en/rest/using-the-rest-api/rate-limits-for-the-rest-api" target="_blank" rel="noopener noreferrer">Rate limits for the REST API</a>). Decisions and trade-offs are in [DECISIONS.md](DECISIONS.md).
+
 Thanks for your interest in the Fullstack Developer role at Circunomics. This challenge is the next step in our process.
  
 We care far more about how you reason than about how much you build. Please read the timebox and the notes on scope before you start.
@@ -23,7 +27,7 @@ Please spend no more than **6 hours**. We would rather see a small, solid, well-
 3. Build a web application with a backend in the language and framework of your choice, and a frontend in Angular, React or Vue.
 The application lets a user track contributor activity across GitHub repositories. It should provide:
  
-**Add a repository** — the user enters an `owner/repo` and the application imports its most recent commits (hashes, author, date) from the [GitHub API](http://developer.github.com/), storing them in the database. Aim for up to 1000 commits per repository. Re-importing the same repository must not create duplicates.
+**Add a repository** — the user enters an `owner/repo` and the application imports its most recent commits (hashes, author, date) from the <a href="https://docs.github.com/en/rest" target="_blank" rel="noopener noreferrer">GitHub REST API</a>, storing them in the database. Aim for up to 1000 commits per repository. Re-importing the same repository must not create duplicates.
  
 **Repository list** — every imported repository, with its commit count and when it was last synced. Each one can be re-synced.
  

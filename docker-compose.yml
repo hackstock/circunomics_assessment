@@ -1,0 +1,41 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: circunomics
+      POSTGRES_PASSWORD: circunomics
+      POSTGRES_DB: circunomics
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U circunomics -d circunomics"]
+      interval: 3s
+      timeout: 5s
+      retries: 20
+
+  backend:
+    build: ./source/backend
+    environment:
+      DATABASE_URL: postgresql+psycopg://circunomics:circunomics@db:5432/circunomics
+      GITHUB_TOKEN: ${GITHUB_TOKEN:-}
+      GITHUB_API_BASE: https://api.github.com
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/health')"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  frontend:
+    build: ./source/frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+
+volumes:
+  pgdata:
