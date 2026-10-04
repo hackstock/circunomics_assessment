@@ -1,6 +1,8 @@
 # Setup
 
-The application runs entirely with Docker. You do not need Python, Node, or Postgres installed on the host.
+A live demo is already running over HTTP on a DigitalOcean droplet: [http://104.248.141.53:8080/](http://104.248.141.53:8080/). Use that if you only want to click through the app.
+
+To run it yourself, use Docker locally. The rest of this file is that path. You do not need Python, Node, or Postgres installed on the host.
 
 You can drive Compose with **Make** (`make up`, …) or type the **Docker Compose** commands yourself. They are equivalent. Make is optional.
 
