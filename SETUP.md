@@ -139,6 +139,7 @@ docker compose exec db psql -U circunomics -d circunomics
 
 ## Layout
 
+- `architecture/` — C4 context, container, component, and code diagrams
 - `source/backend` — FastAPI, SQLAlchemy, provider adapters
 - `source/frontend` — Vue 3 (built in the frontend image, served by nginx)
 - nginx proxies `/api` and `/metrics` to the backend, so the browser only talks to port 8080
