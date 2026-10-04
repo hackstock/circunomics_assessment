@@ -1,9 +1,10 @@
 from datetime import datetime
 
 from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
-from app.db import get_db
+from app.db import database_ready, get_db
 from app.identity import InvalidContributorKey
 from app.providers.base import CatalogNotFound, CatalogStore, RepositoryNotFound, VcsProvider
 from app.providers.registry import get_provider
@@ -32,6 +33,8 @@ def get_query_service(store: CatalogStore = Depends(get_store)) -> QueryService:
 
 @router.get("/health")
 def health():
+    if not database_ready():
+        return JSONResponse({"status": "unavailable"}, status_code=503)
     return {"status": "ok"}
 
 

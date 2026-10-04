@@ -93,7 +93,7 @@ sequenceDiagram
 | Logs | stdout | structlog JSON: `sync.started`, `sync.finished`, `github.response` |
 | Metrics | `GET /metrics` | `catalog_sync_total{status}`, `catalog_sync_duration_seconds`, `github_api_responses_total{status_code}` |
 | HTTP access | Uvicorn | default access log |
-| Health | `GET /api/health` | `{status: ok}` (process up, not a Postgres probe) |
+| Health | `GET /api/health` | `{status: ok}` after `SELECT 1`; 503 `{status: unavailable}` when Postgres does not answer |
 
 ## Test runtime (not the Compose graph)
 

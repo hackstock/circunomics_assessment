@@ -10,7 +10,19 @@ from tests.test_contributors import _seed
 
 
 def test_health(client):
-    assert client.get("/api/health").json() == {"status": "ok"}
+    response = client.get("/api/health")
+    assert response.status_code == 200
+    assert response.json() == {"status": "ok"}
+
+
+def test_health_unavailable_when_database_down(client, monkeypatch):
+    def boom():
+        raise OSError("down")
+
+    monkeypatch.setattr("app.db.engine.connect", boom)
+    response = client.get("/api/health")
+    assert response.status_code == 503
+    assert response.json() == {"status": "unavailable"}
 
 
 def test_list_repositories_empty(client):

@@ -53,6 +53,14 @@ The repository list shows `last_sync_succeeded_at` (“Last successful sync”) 
 
 Commits are stored in a provider-neutral shape (`sha`, author, date, `html_url`). `VcsProvider.iter_recent_commits` is the seam. `Repository.provider` is part of the uniqueness key so the same `owner/name` can exist on GitLab later without colliding. GitLab and Bitbucket have their own REST commit list APIs (<a href="https://docs.gitlab.com/ee/api/commits.html" target="_blank" rel="noopener noreferrer">GitLab repository commits</a>, <a href="https://developer.atlassian.com/cloud/bitbucket/rest/api-group-commits/" target="_blank" rel="noopener noreferrer">Bitbucket commits</a>); only the HTTP mapping would change.
 
+## `/api/health` checks that Postgres answers
+
+Compose treats the backend as healthy when `GET /api/health` returns 2xx, and the frontend waits on that. A handler that always returned `{"status": "ok"}` reported the process, not the catalogue. Queries would then 500 while Docker still considered the API ready. `wait_for_db()` only runs at boot, so a Postgres outage after startup stayed invisible.
+
+The handler runs `SELECT 1` on the SQLAlchemy engine (the same probe as startup, without the 30-second retry). Failure is HTTP 503 `{"status": "unavailable"}`. `urllib.request.urlopen` in the existing Compose healthcheck already treats that as failure, so the check command did not change. On Postgres the probe sets a 2-second `statement_timeout`, under the healthcheck’s 5-second limit, so a stuck server fails the probe instead of hanging it.
+
+GitHub is not part of readiness. Import needs it; listing repositories and contributors only needs the database.
+
 ## Schema is created on startup
 
 SQLAlchemy <a href="https://docs.sqlalchemy.org/en/20/core/metadata.html#sqlalchemy.schema.MetaData.create_all" target="_blank" rel="noopener noreferrer"><code>MetaData.create_all</code></a> runs when the API boots. That is enough for a compose-based demo. <a href="https://alembic.sqlalchemy.org/" target="_blank" rel="noopener noreferrer">Alembic</a> would be the production migration tool; it is not in this slice.
